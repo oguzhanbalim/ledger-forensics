@@ -85,7 +85,7 @@ fabricated    p<0.01    both   mean MAD   median p
 
 - **Recall of 1.000 is by construction** for `split`, `just_below`, `round` and `weekend`. The injected anomalies fall inside the rule parameters because I chose both. A split spread over two weeks or across two approvers would be missed, and the generator doesn't produce one.
 - **`duplicate` recall of 0.843 is a real miss:** an invoice number altered with a suffix and paid more than 5 days later gets through.
-- **The precision figures depend on hard negatives I decided to add:** repeat orders, project batches, a retainer vendor and ordinary weekend postings. Change their count and precision moves. The comparison between rules means more than the absolute values. On real data, expect a base rate of true anomalies far lower than the roughly 5% of rows here, and so much lower precision.
+- **The precision figures depend on hard negatives I decided to add:** repeat orders, project batches, a retainer vendor and ordinary weekend postings. Change their count and precision moves. The comparison between rules means more than the absolute values. On real data, expect a base rate of true anomalies far lower than the roughly 7% of rows here, and so much lower precision.
 - **`weekend` at 0.300** is what a rule with no other context gets: it lists every weekend posting and leaves the judgement to you.
 
 The Benford table has two lessons. Chi-square alone fired on 10 of 20 ledgers with no fabricated amounts, which is why the tool also requires MAD to agree (the "clean" ledgers aren't perfectly Benford; they include fixed fees and a lognormal approximation). The cost of requiring both shows in the 10% row: with 10% of amounts fabricated it flagged 0 of 20. The fabricated-amount model is also mine, and real fabrication may look different.
@@ -100,7 +100,7 @@ The Benford arithmetic has one independent check: the first digits of 2^0 to 2^9
 - **Vendor matching is exact after normalisation.** `Example Supply` and `Example Suply` are two vendors, and related vendors aren't linked.
 - `round` uses one unit (1000), which suits some currencies and ledgers only. Set `round_unit` for yours.
 - It doesn't convert currencies, and it treats credit notes (negative amounts) as outside the duplicate, split and round rules.
-- Single process, in memory, standard library. Fine for a few hundred thousand rows by design; I haven't benchmarked it.
+- Single process, in memory, standard library. I haven't benchmarked it on large files.
 - Tested locally on Python 3.12 only. CI is configured for 3.11 and 3.12 but this repository has not been pushed.
 
 ## License
